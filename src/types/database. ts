@@ -1,0 +1,76 @@
+export interface Profile {
+  id: string;
+  username: string;
+  display_name: string;
+  bio: string;
+  avatar_url: string | null;
+  banner_url: string | null;
+  pinned_post_id: string | null;
+  followers_count: number;
+  following_count: number;
+  created_at: string;
+}
+
+export interface QuotedPost {
+  id: string;
+  author_id: string;
+  author_username: string;
+  author_display_name: string;
+  author_avatar_url: string | null;
+  content: string;
+  media_urls: string[];
+  created_at: string;
+}
+
+export interface FeedPost {
+  id: string;
+  author_id: string;
+  author_username: string;
+  author_display_name: string;
+  author_avatar_url: string | null;
+  content: string;
+  media_urls: string[];
+  parent_id: string | null;
+  quoted_post: QuotedPost | null;
+  like_count: number;
+  repost_count: number;
+  reply_count: number;
+  created_at: string;
+  feed_time: string;
+  reposted_by_username: string | null;
+  reposted_by_display_name: string | null;
+  is_liked: boolean;
+  is_reposted: boolean;
+  is_bookmarked: boolean;
+  is_pinned?: boolean;
+}
+
+export interface NotificationItem {
+  id: string;
+  recipient_id: string;
+  actor_id: string;
+  type: 'like' | 'repost' | 'reply' | 'quote' | 'follow' | 'mention';
+  post_id: string | null;
+  is_read: boolean;
+  created_at: string;
+  actor: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>;
+  post?: { id: string; content: string } | null;
+}
+
+export interface ConversationItem {
+  id: string;
+  other_user: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>;
+  last_message: string | null;
+  last_message_at: string;
+  unread_count: number;
+}
+
+export interface MessageItem {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  recipient_id: string;
+  content: string;
+  is_read: boolean;
+  created_at: string;
+}
