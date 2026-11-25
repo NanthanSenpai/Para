@@ -46,6 +46,7 @@ jobs:
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
+          npx expo install expo-asset -- --yes
           mkdir -p android/app/src/main/assets
           npx expo export:embed \
             --platform android \
