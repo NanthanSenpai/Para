@@ -1,0 +1,31 @@
+import * as ImageManipulator from 'expo-image-manipulator';
+import { supabase } from '../lib/supabase';
+
+export async function compressAndUploadImage(
+  localUri: string,
+  userId: string,
+  folder: 'posts' | 'avatars' | 'banners',
+  maxWidth = 1280
+): Promise<string> {
+  const manipulated = await ImageManipulator.manipulateAsync(
+    localUri,
+    [{ resize: { width: maxWidth } }],
+    { compress: 0.78, format: ImageManipulator.SaveFormat.JPEG }
+  );
+
+  const response = await fetch(manipulated.uri);
+  const arrayBuffer = await response.arrayBuffer();
+  const filePath = `${userId}/${folder}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.jpg`;
+
+  const { error } = await supabase.storage
+    .from('media')
+    .upload(filePath, arrayBuffer, {
+      contentType: 'image/jpeg',
+      upsert: false,
+    });
+
+  if (error) throw error;
+
+  const { data } = supabase.storage.from('media').getPublicUrl(filePath);
+  return data.publicUrl;
+}
