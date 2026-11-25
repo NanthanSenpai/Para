@@ -28,9 +28,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install & align Expo SDK dependencies
+      - name: Upgrade & align to Expo SDK 52
         run: |
           npm install --no-audit --no-fund
+          npx expo install expo@^52.0.0 -- --yes
           npx expo install --fix -- --yes
           npm install --no-audit --no-fund
 
