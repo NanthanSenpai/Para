@@ -28,16 +28,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set JAVA_HOME to Java 17
-        run: |
-          echo "JAVA_HOME=${{ steps.setup-java.outputs.path }}" >> "$GITHUB_ENV"
-          echo "PATH=${{ steps.setup-java.outputs.path }}/bin:$PATH" >> "$GITHUB_ENV"
-          java -version
-
       - name: Install & align Expo SDK dependencies
         run: |
           npm install --no-audit --no-fund
           npx expo install --fix -- --yes
+          npm install --no-audit --no-fund
 
       - name: Generate native Android project
         env:
@@ -47,12 +42,13 @@ jobs:
 
       - name: Build APK with Gradle
         env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace
+          ./gradlew assembleRelease -Dorg.gradle.java.home="${{ steps.setup-java.outputs.path }}" --no-daemon --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
