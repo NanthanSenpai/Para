@@ -46,15 +46,10 @@ jobs:
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
-          RN_VERSION=$(node -p "require('react-native/package.json').version")
-          npm install --no-save --no-audit --no-fund "@react-native/community-cli-plugin@${RN_VERSION}" "@react-native-community/cli"
           mkdir -p android/app/src/main/assets
-          ENTRY_FILE="index.js"
-          [ -f "$ENTRY_FILE" ] || ENTRY_FILE="node_modules/expo/AppEntry.js"
-          npx react-native bundle \
+          npx expo export:embed \
             --platform android \
             --dev false \
-            --entry-file "$ENTRY_FILE" \
             --bundle-output android/app/src/main/assets/index.android.bundle \
             --assets-dest android/app/src/main/res
 
