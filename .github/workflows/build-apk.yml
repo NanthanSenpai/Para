@@ -11,6 +11,7 @@ jobs:
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      CI: 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -36,7 +37,7 @@ jobs:
       - name: Install & align Expo SDK dependencies
         run: |
           npm install --no-audit --no-fund
-          npx expo install --fix --yes
+          npx expo install --fix -- --yes
 
       - name: Generate native Android project
         env:
