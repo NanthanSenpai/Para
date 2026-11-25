@@ -47,7 +47,14 @@ jobs:
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           mkdir -p android/app/src/main/assets
-          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          ENTRY_FILE="index.js"
+          [ -f "$ENTRY_FILE" ] || ENTRY_FILE="node_modules/expo/AppEntry.js"
+          npx --yes @react-native-community/cli bundle \
+            --platform android \
+            --dev false \
+            --entry-file "$ENTRY_FILE" \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
 
       - name: Build Standalone Release APK
         env:
